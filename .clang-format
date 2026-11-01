@@ -1,0 +1,13 @@
+# Code style for HopTrace. Format with: clang-format -i $(git ls-files '*.cpp' '*.hpp')
+BasedOnStyle: Google
+ColumnLimit: 120
+IndentWidth: 2
+DerivePointerAlignment: false
+PointerAlignment: Left
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: All
+IncludeBlocks: Preserve
+SpacesBeforeTrailingComments: 2
