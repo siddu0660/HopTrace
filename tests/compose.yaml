@@ -1,0 +1,15 @@
+# used by ctest: hoptrace run -f tests/compose.yaml --bench=<order_book_bench> --out=<dir>
+bench: not-used-overridden-by-ctest
+defaults:
+  warmup: 50
+  calls: 300
+suites:
+  smoke:
+    sweep:
+      calls: [10, 100]
+    slo:
+      error_rate: 0
+  best:
+    only: order_book_best_bid
+    slo:
+      p99: 10s
