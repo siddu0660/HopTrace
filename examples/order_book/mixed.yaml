@@ -1,0 +1,11 @@
+# Mixed open-loop load: run with  ./order_book_bench --spec=mixed.yaml  (CLI flags override these)
+calls: 20_000
+warmup: 1_000
+workers: 4
+rate: 10_000        # total calls/sec, split across the mix by weight
+size: 1000          # book depth / input count (small | medium | large | N)
+seed: 42
+mix:
+  order_book_insert: 70
+  order_book_best_bid: 30
+slo: p99:2ms

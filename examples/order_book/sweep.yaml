@@ -1,0 +1,11 @@
+# Scaling sweep: how does each hop scale with workers and input size?
+#   ./order_book_bench --spec=sweep.yaml
+calls: 2_000
+warmup: 100
+filter: order_book
+sweep:
+  workers: [1, 2, 4]
+  size: [100, 1_000, 10_000]
+slo:
+  p99: 50ms
+  max: 1s
