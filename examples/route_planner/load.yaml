@@ -1,0 +1,13 @@
+# Popular trips, Poisson arrivals, 4 workers:  ./build/route_bench --spec=load.yaml
+filter: handle_request
+calls: 40_000
+warmup: 2_000
+workers: 4
+rate: 8_000
+schedule: poisson
+size: 2500                # intersections
+key-dist: zipf:1.1        # a few trips are much more popular -> cache hits
+timeout: 2ms
+slo:
+  p99: 5ms
+  error_rate: 0.01

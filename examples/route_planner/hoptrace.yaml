@@ -1,0 +1,39 @@
+# Everything about how this codebase is tested, in one place.
+#   hoptrace run            # build, then run every suite (each one is diffed against its last run)
+#   hoptrace run smoke      # just one suite
+#   hoptrace ls             # show each suite's full benchmark command
+bench: ../../build-rp/route_bench                # relative to this file
+build: cmake -S . -B ../../build-rp -DHOPTRACE_SOURCE=../.. && cmake --build ../../build-rp -j
+
+defaults:                 # every suite starts from these
+  warmup: 500
+  size: 2500
+  seed: 42
+
+suites:
+  smoke:                  # does each entry point work, at a few call counts?
+    sweep:
+      calls: [10, 100, 1_000]
+    slo:
+      error_rate: 0
+
+  cache:                  # the request path with popular trips
+    only: handle_request
+    calls: 5_000
+    key-dist: zipf:1.1
+    timeout: 2ms
+
+  algorithms:             # A* vs Dijkstra on their own
+    only: astar,dijkstra
+    calls: 1_000
+
+  load:                   # open-loop load with an SLO gate
+    only: handle_request
+    calls: 20_000
+    workers: 4
+    rate: 8_000
+    schedule: poisson
+    key-dist: zipf:1.1
+    slo:
+      p99: 5ms
+      error_rate: 0.01
