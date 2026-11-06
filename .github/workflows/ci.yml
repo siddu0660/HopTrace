@@ -1,0 +1,25 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cxx: [g++, clang++]
+        san: ["", "address,undefined"]
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -DHT_SANITIZE=${{ matrix.san }}
+      - run: cmake --build build -j
+      - run: ctest --test-dir build --output-on-failure
+  package:  # install, then build a separate project against it both ways
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build -DHOPTRACE_BUILD_TESTS=OFF && cmake --build build -j && cmake --install build --prefix $PWD/inst
+      - run: cmake -S examples/consumer -B c1 -DCMAKE_PREFIX_PATH=$PWD/inst && cmake --build c1 -j
+      - run: ./c1/textstats_bench --calls=500 --json=run.jsonl && ./inst/bin/hoptrace report run.jsonl --top=3
+      - run: cmake -S examples/consumer -B c2 -DHOPTRACE_SOURCE=$PWD && cmake --build c2 -j && ./c2/textstats_bench --calls=200
+      - run: cmake -S examples/route_planner -B rp -DCMAKE_PREFIX_PATH=$PWD/inst && cmake --build rp -j
+      - run: ./rp/route_bench --calls=500 --size=900 --key-dist=zipf:1.1 && ./rp/route_bench --spec=examples/route_planner/load.yaml --calls=2000 --slo=p99:10s
