@@ -1,0 +1,25 @@
+# API documentation: `doxygen` here, or `cmake --build build --target docs`. Output: build/docs/html/index.html
+PROJECT_NAME           = HopTrace
+PROJECT_BRIEF          = "Per-hop latency profiling and load testing for C++"
+OUTPUT_DIRECTORY       = build/docs
+INPUT                  = include/hoptrace src tools
+FILE_PATTERNS          = *.hpp *.cpp
+RECURSIVE              = NO
+EXTRACT_ALL            = NO
+EXTRACT_STATIC         = YES
+EXTRACT_ANON_NSPACES   = NO
+EXCLUDE_SYMBOLS        = ht::detail
+STRIP_FROM_PATH        = .
+STRIP_FROM_INC_PATH    = include
+JAVADOC_AUTOBRIEF      = YES
+QUIET                  = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_NO_PARAMDOC       = NO
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+HAVE_DOT               = NO
+SOURCE_BROWSER         = YES
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+PREDEFINED             = "__attribute__(x)="
